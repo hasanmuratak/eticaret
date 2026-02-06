@@ -1,0 +1,81 @@
+.sayfa{
+  margin-top:20px;
+}
+
+.baslik{
+  font-size:small;
+  margin-top:10px;
+  margin-bottom:10px;
+  text-align:center;
+}
+
+.urunler{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+
+.product-card{
+  border:1px solid #ddd;
+  padding:10px;
+}
+
+.kart-container{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:24px;
+  margin:20px;
+  padding:24px;
+  background-color:burlywood;
+  border-radius:10px;
+}
+
+.product-detail-page{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+}
+
+.img{
+  width:100px;
+  height:200px;
+  object-fit:contain;
+  display:block;
+  margin:0 auto;
+}
+
+.detaylar{
+  max-width:600px;
+  text-align:center;
+  padding:20px;
+}
+
+.butonlar{
+  display:flex;
+  gap:12px;
+}
+
+/* MUI contained button */
+.butonlar .MuiButton-contained{
+  background-color:#1976d2;
+  transition:background-color 0.2s ease;
+}
+
+.butonlar .MuiButton-contained:hover{
+  background-color:#115293;
+}
+
+/* MUI outlined button */
+.butonlar .MuiButton-outlined{
+  border-color:#1976d2;
+  color:#1976d2;
+  transition:all 0.2s ease;
+}
+
+.butonlar .MuiButton-outlined:hover{
+  background-color:rgba(25,118,210,0.08);
+  border-color:#115293;
+  color:#115293;
+}
