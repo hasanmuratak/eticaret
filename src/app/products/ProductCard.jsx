@@ -1,12 +1,22 @@
+"use client";
 import Box from "@mui/material/Box";
 import { colors } from "@mui/material";
 import "./products.css";
 import { Colorize } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../cart/redux/cartSlice";
 
 // https://fakestoreapi.com/products
 import Rating from '@mui/material/Rating';
 export default function ProductCard({ product }) {
+
+  const dispatch = useDispatch();
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    dispatch(addToCart(product));
+  };
 
   const rate = product.rating.rate;
   const count = product.rating.count;
@@ -15,8 +25,9 @@ export default function ProductCard({ product }) {
 
     <Box
       sx={{
-        width: 260,
-        height: 360,
+        width: "100%",
+        maxWidth: 260,
+        minHeight: 360,
         backgroundColor: "#fff",
         borderRadius: 3,
         p: 2,
@@ -34,7 +45,7 @@ export default function ProductCard({ product }) {
 
       <Box
         sx={{
-          width: 220,
+          width: "100%",
           height: 220,
           backgroundColor: "#fff",
           borderRadius: 3,
@@ -47,7 +58,7 @@ export default function ProductCard({ product }) {
 
         }}
       >
-        <img className="img" src={product.image} />
+        <img className="img" src={product.image} alt={product.title} />
 
       </Box>
       <Box>
@@ -64,6 +75,20 @@ export default function ProductCard({ product }) {
         </Box>
         <Typography sx={{ fontSize: "small", textAlign: "center", marginBottom: "5px" }}>{product.title}</Typography>
         <p style={{ color: "orange", fontSize: "small" }}>{product.price} $</p>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, mt: 1 }}>
+          <Button
+            size="small"
+            variant="contained"
+            onClick={handleAddToCart}
+            sx={{
+              backgroundColor: '#ff8a00',
+              color: '#fff',
+              '&:hover': { backgroundColor: '#ff7a00' }
+            }}
+          >
+            Sepete Ekle
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

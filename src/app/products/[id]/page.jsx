@@ -17,8 +17,7 @@ export default async function ProductDetailPage({ params }) {
       <p className="detaylar">{product.description}</p>
 
       <div className="butonlar .MuiButton-contained">
-        <Button variant="contained">Tıkla</Button>
-        <Button  variant="outlined">Tıkla</Button>
+        
       </div>
     </div>
   );

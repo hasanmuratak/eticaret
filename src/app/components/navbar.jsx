@@ -1,242 +1,171 @@
-"use client"
-import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
+"use client";
+import React, { useState } from "react";
+import Link from "next/link";
+import {
+  AppBar,
+  Toolbar,
+  Box,
+  Typography,
+  IconButton,
+  InputBase,
+  Drawer,
+  Badge,
+  List,
+  ListItem,
+  ListItemAvatar,
+  Avatar,
+  ListItemText,
+  Divider,
+  Button
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromCart, increaseQty, decreaseQty } from "../cart/redux/cartSlice";
+import { useRouter } from "next/navigation";
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(3),
-        width: 'auto',
-    },
-}));
+export default function Navbar() {
+  const [open, setOpen] = useState(false);
+  const cart = useSelector((state) => state.cart.items || []);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
+  const itemCount = cart.reduce((s, i) => s + (i.quantity || 0), 0);
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '20ch',
-        },
-    },
-}));
+  const toggleDrawer = (val) => () => setOpen(val);
 
-export default function PrimarySearchAppBar() {
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const handleGoToCart = () => {
+    setOpen(false);
+    router.push('/cart');
+  };
 
-    const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-    const handleProfileMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMobileMenuClose = () => {
-        setMobileMoreAnchorEl(null);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-        handleMobileMenuClose();
-    };
-
-    const handleMobileMenuOpen = (event) => {
-        setMobileMoreAnchorEl(event.currentTarget);
-    };
-
-    const menuId = 'primary-search-account-menu';
-    const renderMenu = (
-        <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            id={menuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-        >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-        </Menu>
-    );
-
-    const mobileMenuId = 'primary-search-account-menu-mobile';
-    const renderMobileMenu = (
-        <Menu
-            anchorEl={mobileMoreAnchorEl}
-            anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            id={mobileMenuId}
-            keepMounted
-            transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-            }}
-            open={isMobileMenuOpen}
-            onClose={handleMobileMenuClose}
-        >
-            <MenuItem>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="error">
-                        <MailIcon />
-                    </Badge>
-                </IconButton>
-                <p>Messages</p>
-            </MenuItem>
-            <MenuItem>
-                <IconButton
-                    size="large"
-                    aria-label="show 17 new notifications"
-                    color="inherit"
-                >
-                    <Badge badgeContent={17} color="error">
-                        <NotificationsIcon />
-                    </Badge>
-                </IconButton>
-                <p>Notifications</p>
-            </MenuItem>
-            <MenuItem onClick={handleProfileMenuOpen}>
-                <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
-                    <AccountCircle />
-                </IconButton>
-                <p>Profile</p>
-            </MenuItem>
-        </Menu>
-    );
-
-    return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar
-                position="sticky"
-                elevation={0}
-                sx={{
-                    backdropFilter: "blur(10px)",
-                    background: "rgba(25,118,210,0.85)",
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)"
-                }}
-            >
-                <Toolbar sx={{ maxWidth: 1200, width: "100%", mx: "auto" }}>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{ display: { xs: 'none', sm: 'block' } }}
-                    >
-                        HASAN E TİCARET 
-                    </Typography>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </Search>
-                    <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                            <Badge color="error">  {/* badgeContent={sayi} */}
-                                <MailIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            aria-label="show 17 new notifications"
-                            color="inherit"
-                        >
-                            <Badge color="error">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
-                    </Box>
-                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </Box>
-                </Toolbar>
-            </AppBar>
-            {renderMobileMenu}
-            {renderMenu}
+  return (
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{
+        bgcolor: "#fff",
+        color: "#000",
+        borderBottom: "1px solid #eee"
+      }}
+    >
+      <Toolbar
+        sx={{
+          maxWidth: 1300,
+          width: "100%",
+          mx: "auto",
+          justifyContent: "space-between"
+        }}
+      >
+        {/* LEFT LINKS */}
+        <Box sx={{ display: "flex", gap: 4, fontSize: 15 }}>
+          <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
+            Kadın
+          </Link>
+          <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
+            Erkek
+          </Link>
+          <Link href="/" style={{ textDecoration: "none", color: "inherit" }}>
+            Yeni
+          </Link>
         </Box>
-    );
+
+        {/* LOGO */}
+        <Typography
+          sx={{
+            fontWeight: 700,
+            letterSpacing: 4,
+            fontSize: 22
+          }}
+        >
+          HASANSTORE
+        </Typography>
+
+        {/* RIGHT SIDE */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          
+          {/* SEARCH */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              bgcolor: "none",
+              px: 1,
+              py: 0.5,
+              borderRadius: 3
+            }}
+          >
+            <SearchIcon sx={{ fontSize: 20 }} />
+            <InputBase placeholder="Ara..." sx={{ ml: 1,fontSize: 15  }} />
+          </Box>
+
+          <IconButton>
+            <AccountCircle />
+          </IconButton>
+
+          <IconButton onClick={toggleDrawer(true)} aria-label="Sepet">
+            <Badge badgeContent={itemCount} color="error">
+              {itemCount > 0 ? (
+                <ShoppingCartCheckoutIcon sx={{ color: '#d32f2f' }} />
+              ) : (
+                <ShoppingCartIcon />
+              )}
+            </Badge>
+          </IconButton>
+
+          <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+            <Box sx={{ width: 360, p: 2 }} role="presentation">
+              <Typography variant="h6" sx={{ mb: 1 }}>Sepetiniz</Typography>
+              <Divider />
+
+              {cart.length === 0 ? (
+                <Box sx={{ mt: 4, textAlign: 'center', color: '#666' }}>Sepetiniz boş</Box>
+              ) : (
+                <List>
+                  {cart.map((item) => (
+                    <ListItem key={item.id} alignItems="flex-start" secondaryAction={
+                      <IconButton edge="end" onClick={() => dispatch(removeFromCart(item.id))}>
+                        <DeleteOutlineIcon />
+                      </IconButton>
+                    }>
+                      <ListItemAvatar>
+                        <Avatar src={item.image} variant="rounded" sx={{ width: 56, height: 56 }} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={item.title}
+                        secondary={
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                            <IconButton size="small" onClick={() => dispatch(decreaseQty(item.id))}><RemoveIcon fontSize="small"/></IconButton>
+                            <Typography variant="body2">{item.quantity}</Typography>
+                            <IconButton size="small" onClick={() => dispatch(increaseQty(item.id))}><AddIcon fontSize="small"/></IconButton>
+                            <Typography variant="body2" sx={{ ml: 1, fontWeight: 600 }}>{(item.price * item.quantity).toFixed(2)} $</Typography>
+                          </Box>
+                        }
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+
+              <Divider sx={{ my: 1 }} />
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
+                <Typography variant="subtitle1">Toplam</Typography>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>{cart.reduce((t, i) => t + i.price * i.quantity, 0).toFixed(2)} $</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1, mt: 2 }}>
+                <Button variant="outlined" fullWidth onClick={handleGoToCart}>Sepete Git</Button>
+                <Button variant="contained" fullWidth color="primary">Ödeme</Button>
+              </Box>
+            </Box>
+          </Drawer>
+
+        </Box>
+      </Toolbar>
+    </AppBar>
+  );
 }

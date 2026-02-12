@@ -1,5 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
+import Providers from "./redux/Providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,11 +20,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang="tr">
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <Providers>
+          <Toaster position="top-right" />
+          {children}
+        </Providers>
       </body>
     </html>
   );

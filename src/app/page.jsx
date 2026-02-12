@@ -4,6 +4,8 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Navbar from "./components/navbar"
 import ProductsPage from './products/page';
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 export default function SimpleContainer() {
   return (
